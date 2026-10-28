@@ -1,0 +1,17 @@
+{
+ "A cozy artisan bakery at dawn, warm light": {
+  "RTX 4090": 0.0,
+  "RTX 5090": 8.44,
+  "L40S": 10.19,
+  "RTX PRO 6000": 12.07,
+  "GB10": 11.15
+ },
+ "Isometric illustration of a small data center with glowing servers": {
+  "RTX 4090": 0.0,
+  "RTX 5090": 5.78,
+  "L40S": 6.45,
+  "RTX PRO 6000": 6.88,
+  "GB10": 5.2
+ },
+ "sdxl_bs1_vs_bs4": 7.37
+}

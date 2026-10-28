@@ -1,0 +1,32 @@
+{
+ "ledger_rows": 166,
+ "table": {
+  "blank|no create_response logged": 11,
+  "blank|no lease log": 1,
+  "complete|created": 57,
+  "partial|created": 48,
+  "running|created": 6,
+  "running|refused": 43
+ },
+ "lease_dirs": 165,
+ "lease_dirs_by_outcome": {
+  "created": 110,
+  "refused": 44,
+  "no create_response logged": 11
+ },
+ "offers_seen": 2006,
+ "offers_min": 0.0,
+ "offers_median": 5.333333333333333,
+ "offers_max": 53.333333333333336,
+ "offers_share_zero_to_6": 0.5244267198404786,
+ "offers_over_30": 361,
+ "rented_n": 110,
+ "rented_median": 4.0,
+ "rented_max": 40.96,
+ "rented_min": 0.0,
+ "rented_over_30": 20,
+ "gpu_5090": {
+  "created": 27,
+  "refused": 12
+ }
+}

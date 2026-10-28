@@ -1,0 +1,101 @@
+{
+ "tts": {
+  "curto": {
+   "seconds": 6.75,
+   "pauses_ge_200ms": 3,
+   "quiet_share": 0.288,
+   "pauses": [
+    [
+     0.0,
+     0.66
+    ],
+    [
+     0.94,
+     0.28
+    ],
+    [
+     1.78,
+     0.6
+    ]
+   ]
+  },
+  "medio": {
+   "seconds": 14.77,
+   "pauses_ge_200ms": 4,
+   "quiet_share": 0.251,
+   "pauses": [
+    [
+     0.0,
+     0.82
+    ],
+    [
+     3.34,
+     0.22
+    ],
+    [
+     7.88,
+     0.52
+    ],
+    [
+     11.1,
+     0.84
+    ]
+   ]
+  },
+  "longo": {
+   "seconds": 28.28,
+   "pauses_ge_200ms": 8,
+   "quiet_share": 0.205,
+   "pauses": [
+    [
+     0.0,
+     0.82
+    ],
+    [
+     8.44,
+     0.2
+    ],
+    [
+     9.44,
+     0.98
+    ],
+    [
+     13.14,
+     0.46
+    ],
+    [
+     15.24,
+     0.52
+    ],
+    [
+     17.04,
+     0.38
+    ],
+    [
+     18.84,
+     0.56
+    ],
+    [
+     25.12,
+     0.22
+    ]
+   ]
+  },
+  "personaplex_4090_NATF2": {
+   "text_tokens": 130,
+   "quiet_share": 0.644
+  }
+ },
+ "personaplex_text": {
+  "RTX 3090 NATF2": "Hey, let me know if you have any questions. Yeah, the trick is to rinse the rice a few times until the water runs clear, that cuts down on extra starch, then let it soak for a short time, use a pot with a lid and lower the heat just before it' done, that way it cooks through without getting gooey. Alright, a quick garnish could be a sprinkle of fresh chopped parsley or some toasted sesame seeds, a few sliced green onions add nice color, even a drizzle of good olive oil with a pinch of garlic powder works well.",
+  "RTX 3090 NATM1": "Hey, let me know if you have any questions. Yeah, the trick is to rinse the rice a few times until the water runs clear, that cuts down starch, then use a pot with a tight lid, bring to a boil, then lower the heat and let it simmer without lifting the lid, after it' done fluff it with a fork and let If you want a pop of color, sprinkle a little bit of chopped fresh herbs like cilantro or parsley, or a few chopped fresh green onions, or even a handful of pistachio nuts, that adds a bright note without any cooking.",
+  "RTX 4090 NATF2": "Hey, let me know if you have any questions. Hmm, you want it not to stick. Use a pot with a tight lid, add a bit of oil, and don't overfill the pot. Let it simmer low and slow, and keep the heat steady, and stir it gently. Okay, a quick garnish could be a drizzle of olive oil, a sprinkle of chopped herbs like parsley or cilantro, a tiny sprinkle of toasted sesame or flaxseed, a bit of fresh cilantro, or even a drizzle of soy sauce if you want some color.",
+  "RTX 4090 NATM1": "Hey, let me know if you have any questions. Hmm, the trick is to keep the heat gentle and stir often, so the grains don't sit and stick together. You can also rinse the rice first, that washes off extra starch, and then use a pot with a lid and low heat. That way it stays fluffy. A quick garnish could be a sprinkle of fresh chopped cilantro or a drizzle of pomegranate seeds, both add a nice pop of color and a bit of flavor, you could also toss in some chopped scallions or a squeeze of lime if you like.",
+  "RTX 5090 NATF2": "Hey, let me know if you have any questions. Hmm, you want rice that stays separate, you can rinse it a few times, use a bit more water, bring it to a boil then lower the heat and let it sit covered for a few minutes, that helps keep it from getting gummy. Okay, a quick garnish could be a drizzle of good olive oil or a sprinkle of fresh chopped parsley, both add a nice color and flavor.",
+  "RTX 5090 NATM1": "Hey, let me know if you have any questions. Hmm, try rinsing the rice a few times until the water runs clear, that cuts down on extra starch, also don' let it sit covered in the pot, use a pinch of salt or a splash of oil in the water when you start, and keep the heat medium high, not too high so it doesn't get gummy. You could toss the bowl with fresh herbs like basil or parsley, a dash of lemon juice, a sprinkle of toasted sesame or poppy seeds, or even a few chopped walnuts or pistachios, those add colour and taste.",
+  "L40S NATF2": "Hey, let me know if you have any questions. Hmm, you want it not to stick. Use a pot with a tight lid, add a bit of oil, and don't overfill the pot. Let it simmer low and slow, and keep the heat steady, and stir it gently. Okay, a quick garnish could be a drizzle of olive oil, a sprinkle of chopped herbs like parsley or cilantro, a tiny sprinkle of toasted sesame or flaxseed, a bit of fresh cilantro, or even a drizzle of soy sauce if you want some color.",
+  "L40S NATM1": "Hey, let me know if you have any questions. Hmm, the trick is to keep the heat gentle and stir often, so the grains don't sit and stick together. You can also rinse the rice first, that washes off extra starch, and then use a pot with a lid and low heat. That way it stays fluffy. A quick garnish could be a sprinkle of fresh chopped cilantro or a drizzle of pomegranate seeds, both add a nice pop of color and a bit of flavor, you could also toss in some chopped scallions or a squeeze of lime if you like.",
+  "RTX PRO 6000 NATF2": "Hey, let me know if you have any questions. Hmm, try rinsing the rice a few times until the water runs clear, that cuts down on extra starch, then use a pot with a tight fitting lid and don't stir it while it cooks, also you can let it sit off the heat for a minute before fluffing. A quick garnish could be a sprinkle of toasted sesame seeds or a drizzle of good olive oil with a pinch of saffron, even a fresh basil leaf or a squeeze of lime can add color and a nice flavor.",
+  "RTX PRO 6000 NATM1": "Hey, let me know if you have any questions. Hmm, you can keep the heat steady, use a pot with a lid so it doesn't stick to the bottom, let the rice sizzle for a few minutes, then stir it once or twice, and add a little bit of water if you need, that usually stops it from getting sticky. Okay, a quick garnish could be a sprinkle of fresh chopped cilantro or some chopped parsley, or even a drizzle of lime juice or a bit of butter, those add colour and a nice flavor, you know."
+ }
+}

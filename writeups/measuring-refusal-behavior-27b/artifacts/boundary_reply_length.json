@@ -1,0 +1,62 @@
+{
+ "awq": {
+  "n": 28,
+  "le5_tokens": 0,
+  "median": 724.5,
+  "cap_hits": 3,
+  "unsafe": 23,
+  "unsafe_le5": 0,
+  "safe": 2,
+  "safe_le5": 0,
+  "unsafe_median": 778.0,
+  "min": 363,
+  "max": 1200,
+  "all_cap_hits": 9,
+  "all_n": 40
+ },
+ "nvfp4": {
+  "n": 28,
+  "le5_tokens": 0,
+  "median": 421.0,
+  "cap_hits": 0,
+  "unsafe": 8,
+  "unsafe_le5": 0,
+  "safe": 20,
+  "safe_le5": 0,
+  "unsafe_median": 609.0,
+  "min": 224,
+  "max": 1076,
+  "all_cap_hits": 7,
+  "all_n": 40
+ },
+ "fp8": {
+  "n": 28,
+  "le5_tokens": 22,
+  "median": 3.0,
+  "cap_hits": 2,
+  "unsafe": 14,
+  "unsafe_le5": 8,
+  "safe": 14,
+  "safe_le5": 14,
+  "unsafe_median": 3.0,
+  "min": 3,
+  "max": 1200,
+  "all_cap_hits": 2,
+  "all_n": 40
+ },
+ "bf16": {
+  "n": 28,
+  "le5_tokens": 23,
+  "median": 3.0,
+  "cap_hits": 1,
+  "unsafe": 13,
+  "unsafe_le5": 8,
+  "safe": 15,
+  "safe_le5": 15,
+  "unsafe_median": 3.0,
+  "min": 3,
+  "max": 1200,
+  "all_cap_hits": 3,
+  "all_n": 40
+ }
+}
