@@ -53,7 +53,7 @@ Eight GPU models (RTX 3090, RTX 4090, RTX 5090, L40S, A100, H100 NVL, RTX PRO 60
 
 ## Writeup versions
 
-`writeups/<article>/writeup.md` holds each article as plain Markdown without code (prose, tables and figures; the figures are the PNG files next to it), ready to paste into the Kaggle Writeups editor.
+Each article also exists as a Kaggle **Writeup** (reading version, with figures, tables, logs and saved artifacts placed in the text). The Markdown source of each one is `writeups/<article>/writeup.md`; figures are in `writeups/<article>/figures/` and the real artifacts the campaign produced (generated images, video frames, spectrograms, server logs) are in `writeups/<article>/artifacts/`.
 
 ## Ten findings that survived the checking
 
