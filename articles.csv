@@ -1,0 +1,21 @@
+n,title,url,repositories
+1,What a GPU benchmark campaign really costs,https://www.kaggle.com/code/lucasrangelss/what-a-gpu-benchmark-campaign-really-costs,vast-gpu-benchmark-harness
+2,What fits and what fails across seven GPUs,https://www.kaggle.com/code/lucasrangelss/what-fits-and-what-fails-across-seven-gpus,llm-serving-engines-bench;vast-gpu-benchmark-harness
+3,Cost per token and cost per user for a 27B model,https://www.kaggle.com/code/lucasrangelss/cost-per-token-and-cost-per-user-for-a-27b-model,llm-serving-engines-bench
+4,The quantization ladder for a 27B model,https://www.kaggle.com/code/lucasrangelss/the-quantization-ladder-for-a-27b-model,quantization-and-offload-lab
+5,Measuring refusal behavior in 27B builds,https://www.kaggle.com/code/lucasrangelss/measuring-refusal-behavior-in-27b-builds,quantization-and-offload-lab
+6,How much speculative decoding really speeds up,https://www.kaggle.com/code/lucasrangelss/how-much-speculative-decoding-really-speeds-up,quantization-and-offload-lab;llm-serving-engines-bench
+7,Long context and prefix caching for agents,https://www.kaggle.com/code/lucasrangelss/long-context-and-prefix-caching-for-agents,llm-serving-engines-bench
+8,A 35-minute soak test on one RTX 5090,https://www.kaggle.com/code/lucasrangelss/a-35-minute-soak-test-on-one-rtx-5090,llm-serving-engines-bench
+9,vLLM against SGLang on one RTX 5090,https://www.kaggle.com/code/lucasrangelss/vllm-against-sglang-on-one-rtx-5090,llm-serving-engines-bench
+10,A 27B model on a 24 GB card in three ways,https://www.kaggle.com/code/lucasrangelss/a-27b-model-on-a-24-gb-card-in-three-ways,quantization-and-offload-lab;llm-serving-engines-bench
+11,NVFP4 on cards without FP4 hardware,https://www.kaggle.com/code/lucasrangelss/nvfp4-on-cards-without-fp4-hardware,llm-serving-engines-bench;quantization-and-offload-lab
+12,What runs on an ARM GB10 desk machine,https://www.kaggle.com/code/lucasrangelss/what-runs-on-an-arm-gb10-desk-machine,llm-serving-engines-bench;vision-detection-tracking-bench
+13,YOLO11 on eight GPUs and a CPU-bound surprise,https://www.kaggle.com/code/lucasrangelss/yolo11-on-eight-gpus-and-a-cpu-bound-surprise,vision-detection-tracking-bench
+14,SAM 2 Grounding DINO and Mask R-CNN latency,https://www.kaggle.com/code/lucasrangelss/sam-2-grounding-dino-and-mask-r-cnn-latency,vision-detection-tracking-bench
+15,How many cameras can one RTX 5090 serve,https://www.kaggle.com/code/lucasrangelss/how-many-cameras-can-one-rtx-5090-serve,multi-camera-rtsp-capacity;vision-detection-tracking-bench
+16,Image and video generation cost per output,https://www.kaggle.com/code/lucasrangelss/image-and-video-generation-cost-per-output,image-video-generation-bench
+17,Speech workloads on rented GPUs,https://www.kaggle.com/code/lucasrangelss/speech-workloads-on-rented-gpus,voice-stt-tts-bench
+18,Ten attempts to run an image-to-3D tool,https://www.kaggle.com/code/lucasrangelss/ten-attempts-to-run-an-image-to-3d-tool,image-to-3d-and-digital-twin
+19,Eighty-three open tools in a disposable sandbox,https://www.kaggle.com/code/lucasrangelss/eighty-three-open-tools-in-a-disposable-sandbox,web-automation-lab;agent-tooling-token-savings;app-platforms-smoke-tests
+20,From a benchmark to a price per unit,https://www.kaggle.com/code/lucasrangelss/from-a-benchmark-to-a-price-per-unit,vast-gpu-benchmark-harness

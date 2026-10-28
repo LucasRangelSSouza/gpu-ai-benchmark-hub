@@ -1,0 +1,12 @@
+repository,url,description
+vast-gpu-benchmark-harness,https://github.com/LucasRangelSSouza/vast-gpu-benchmark-harness,"Orchestration, safety nets, cost ledger and the pricing model"
+llm-serving-engines-bench,https://github.com/LucasRangelSSouza/llm-serving-engines-bench,"vLLM, SGLang and llama.cpp under load; KV cache; long context; start logs"
+quantization-and-offload-lab,https://github.com/LucasRangelSSouza/quantization-and-offload-lab,"Quantization ladder with paired tests, speculative decoding, bandwidth identity, offload"
+vision-detection-tracking-bench,https://github.com/LucasRangelSSouza/vision-detection-tracking-bench,"YOLO11, SAM 2, Grounding DINO, Mask R-CNN, Detectron2 on 8 GPUs"
+multi-camera-rtsp-capacity,https://github.com/LucasRangelSSouza/multi-camera-rtsp-capacity,How many RTSP cameras one GPU sustains: process-per-camera against a batch service
+image-video-generation-bench,https://github.com/LucasRangelSSouza/image-video-generation-bench,"SDXL-Turbo, FLUX.3 Klein, LTX-Video, FFmpeg NVENC; includes the generated artifacts"
+voice-stt-tts-bench,https://github.com/LucasRangelSSouza/voice-stt-tts-bench,"F5-TTS, faster-whisper, OpenVoice, PersonaPlex: real-time factors and cold starts"
+image-to-3d-and-digital-twin,https://github.com/LucasRangelSSouza/image-to-3d-and-digital-twin,"Ten attempts at an image-to-3D tool, COLMAP note, 3D viewer build"
+web-automation-lab,https://github.com/LucasRangelSSouza/web-automation-lab,"Playwright, Crawl4AI, Obscura and a bot-detection page in a sandbox"
+agent-tooling-token-savings,https://github.com/LucasRangelSSouza/agent-tooling-token-savings,"Context compression and tracing smoke tests, with a clear statement of what is not claimed"
+app-platforms-smoke-tests,https://github.com/LucasRangelSSouza/app-platforms-smoke-tests,"Taipy, Litpage, Open WebUI and MediaMTX install-and-answer checks"
