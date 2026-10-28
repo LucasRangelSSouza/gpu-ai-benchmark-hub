@@ -1,0 +1,297 @@
+# What a GPU benchmark campaign really costs
+
+*Lucas Rangel. The full executable notebook with every number traced to its data file is [here](https://www.kaggle.com/code/lucasrangelss/what-a-gpu-benchmark-campaign-really-costs); code, tests and data are in the [gpu-ai-benchmark-hub](https://github.com/LucasRangelSSouza/gpu-ai-benchmark-hub) repositories.*
+
+## Summary
+
+I rented GPUs on the Vast.ai marketplace for about a day and a half to measure how language models, vision models, voice models and video tools behave on eight different cards. The campaign consumed US$ 50.79, which is about R$ 252 at the exchange rate I used (4.9652 reais per dollar). That figure is the amount my credit balance moved by, and it is the only number in this article I trust completely.
+
+The part I can itemize is smaller. The lease ledger, which records each rented instance with its hourly price and its lifetime, explains US$ 27.25 of the spend across 166 rentals. The other US$ 23.54 is a mix of bandwidth fees, disk, time on boots that never became usable, and instances whose end time I never recorded. I cannot split that remainder with evidence, and I say so where it matters instead of inventing a breakdown.
+
+Three findings change how I would plan the next campaign:
+
+- The cheapest hour is rarely the cheapest result. The RTX 3090 cost 0.249 dollars per hour on average, but it consumed 11.8 hours of the campaign, nearly as many as the RTX 5090. The 5090 cost more per hour and produced results faster, yet it still took the largest share of the money (8.54 dollars) because I rented it 39 times.
+- Retries dominate. Of 166 ledger rows, only 57 are marked complete and 48 partial. Every extra boot is a fresh chance to pay for a host with slow downloads.
+- Price per measurement varies by a factor of ten between cards, and its ranking is not the ranking of price per hour.
+
+Every table and figure below is computed from the dataset attached to this notebook, and each number in the text names the file it came from.
+
+> **Code and data.** Everything behind this article is public: the code that ran, the curated data, the analysis that regenerates every figure, and tests that pin the conclusions to the data. Repositories: [vast-gpu-benchmark-harness](https://github.com/LucasRangelSSouza/vast-gpu-benchmark-harness). Index of the whole series: [gpu-ai-benchmark-campaign-2026](https://github.com/LucasRangelSSouza/gpu-ai-benchmark-campaign-2026).
+
+## What I was trying to buy
+
+The campaign was not a single experiment. It was about fifteen small ones, each needing a GPU for a few minutes to an hour: serving a 27 billion parameter language model under load, running object detectors, generating images and short videos, synthesizing speech, reconstructing a 3D scene, and pushing many camera streams through a detector. Each experiment needed suitable hardware, a working software stack, and model files large enough to matter. The model downloads are what make marketplace rental expensive in ways the headline hourly price hides, so I will describe the cost in the order I met it: what the ledger records, what it cannot record, what each card cost per useful measurement, and what I would change.
+
+I should say what this article is not. It is not a comparison of Vast.ai against other clouds, because I did not rent from other clouds. It is not a recommendation to rent a particular card, because the companion articles carry the performance evidence for that. It is an accounting of one campaign by one person, written down while the records were still fresh.
+
+## Where the numbers come from
+
+Three files carry the cost story.
+
+`campaign_totals.json` holds the reconciled totals. I built it from the credit balance before the campaign (49.80 dollars), the single deposit I made during it (6.88 dollars) and the balance when my credit guard stopped the last rental (5.89 dollars). The arithmetic gives 50.79 dollars. This is a balance-sheet number: it contains everything the platform charged, including charges I never saw as line items.
+
+`lease_ledger.csv` has one row per instance I created, 166 in total. Each row carries the card model, the hourly price quoted at rental time, the country of the host, the hours between creation and destruction, the cost I estimated as price times time, the seconds until the instance reported ready, and a status. Two sources feed it. The first is the budget ledger that my watchdog maintained during the first day. The second is the raw event log of lease registrations and closures, which I used to add nine rentals from the last evening that the budget ledger had not yet absorbed when I first built it. The estimate multiplies price by lifetime and ignores bandwidth and storage.
+
+`rental_cost_by_gpu.csv` is the same ledger grouped by card.
+
+There is a gap between these sources, and explaining it honestly is the main job of this article. The ledger is an operator's log written while I was busy keeping a campaign alive. It is not an invoice, and treating it as one would give a false sense of precision.
+
+I found one error in my own first version of this analysis, and it is worth telling because it is the kind of error this data invites. My first itemization used only the budget ledger and showed 21.58 dollars. I then noticed that the raw event log held rentals from the final evening, including a long RTX 5090 session and two RTX PRO 6000 sessions, that were missing from the budget ledger. Merging them raised the itemized figure by 5.67 dollars. A gap that looked like 57 percent of the spend became 46 percent. The lesson is that an unexplained remainder is partly an accounting artifact, and the first thing to do with it is look for records you forgot to merge.
+
+## The balance sheet
+
+The first figure is the simplest one: how much of the money is explained.
+
+![Figure 1](https://raw.githubusercontent.com/LucasRangelSSouza/gpu-ai-benchmark-hub/main/writeups/what-a-gpu-benchmark-really-costs/figures/fig01.png)
+
+The ledger covers 54 percent of the spend (27.25 of 50.79 dollars). I want to be careful about the other 46 percent, because it is tempting to blame one cause and the data does not allow that.
+
+Four things are in there, and I know each one happened:
+
+1. Bandwidth. Vast.ai hosts set their own price for download traffic, from zero to about 41 dollars per terabyte in the offers I saw. The NVFP4 checkpoint of the 27 billion parameter model is 28.2 GiB on disk and the BF16 one is about twice that. I downloaded several variants on several hosts. A host charging 20 dollars per terabyte turns a 50 gigabyte download into one dollar.
+2. Disk. I requested 330 gigabytes per instance after an early attempt with 120 gigabytes ran out of space mid-download. Disk is billed for as long as the instance exists, including while it sits idle.
+3. Instances that existed but never worked. Some hosts accepted the rental and never reached a usable state. I destroyed them, but they ran for minutes.
+4. Rows I did not close. 49 of the 166 ledger rows have the status "running" and no recorded lifetime. They were real instances that I destroyed, but the entry was never finalized, so the estimate for those rows is zero. The money they consumed sits in the gap.
+
+A fifth item is the last rental of the campaign. A final attempt to generate a 3D model with a research tool ran on an RTX 4090 until my credit guard destroyed it when the balance fell to 5.89 dollars. It cost about 0.65 dollars, which I know only from the balance drop, and it produced no 3D output. I entered it in the ledger with that balance-based cost.
+
+I cannot say how the gap divides among these causes, because the platform's invoice did not give me a per-instance breakdown and I did not record download volume per host. The lesson is operational: write the lifetime and the traffic of every instance at destruction time, automatically. The harness in the companion repository `vast-gpu-benchmark-harness` records lifetime but not traffic, and that missing column is exactly why the gap stays open.
+
+## The campaign over time
+
+The ledger has creation timestamps, so I can show how the itemized spend accumulated.
+
+![Figure 2](https://raw.githubusercontent.com/LucasRangelSSouza/gpu-ai-benchmark-hub/main/writeups/what-a-gpu-benchmark-really-costs/figures/fig02.png)
+
+The first rental in the ledger started on 26 October 2026 at 10:50 UTC and the last registered one on 28 October at 00:35 UTC. By 06:00 UTC on the 26th the cumulative itemized spend was 2.82 dollars, by 18:00 it was 13.54 dollars, and by 06:00 on the 27th it was 20.06 dollars. The curve is steepest in the first twelve hours, when I ran the broad sweeps over many cards at once, and flattens whenever I stopped to read results. It steepens again on the evening of the 27th, when the long-context, soak and camera studies ran on the RTX 5090 and the RTX PRO 6000.
+
+That shape matches how the work felt. Breadth was cheap and fast. Depth was slow: a 35 minute stability test costs more than a hundred 20 millisecond detector calls, and it is also the only way to learn whether a server leaks memory over time.
+
+## Rental cost by card
+
+Which cards used the money? This table answers it from the ledger.
+
+| index  | rentals Unnamed: 1_level_1 | hours Unnamed: 2_level_1 | cost Unnamed: 3_level_1 | mean_price Unnamed: 4_level_1 |
+|---|---|---|---|---|
+| RTX 5090 | 39 | 12.44 | 8.536 | 0.627 |
+| RTX PRO 6000 | 15 | 3.668 | 5.713 | 1.659 |
+| RTX 4090 | 29 | 6.22 | 4.046 | 0.548 |
+| L40S | 10 | 4.907 | 3.925 | 0.801 |
+| RTX 3090 | 30 | 11.8 | 2.966 | 0.249 |
+| H100 NVL | 1 | 0.462 | 1.296 | 2.803 |
+| A100 PCIE | 1 | 0.647 | 0.432 | 0.668 |
+| A800 PCIE | 1 | 0.251 | 0.134 | 0.535 |
+| RTX 3060 | 13 | 1.545 | 0.104 | 0.073 |
+| GTX 1080 Ti | 14 | 1.446 | 0.096 | 0.063 |
+| GTX 1650 | 1 | 0.119 | 0.006 | 0.048 |
+| GB10 | 3 | 0 | 0 | 0.449 |
+
+![Figure 3](https://raw.githubusercontent.com/LucasRangelSSouza/gpu-ai-benchmark-hub/main/writeups/what-a-gpu-benchmark-really-costs/figures/fig03.png)
+
+The RTX 5090 took the largest share at 8.54 dollars over 12.44 hours and 39 rentals. The RTX PRO 6000 came second at 5.71 dollars with only 15 rentals and 3.67 hours, which reflects its mean price of 1.66 dollars per hour. The L40S used 3.93 dollars over 4.91 hours, the RTX 4090 used 4.05 dollars over 6.22 hours, and the RTX 3090 used 2.97 dollars over 11.8 hours, the most hours of any card. The H100 NVL appears once, for 1.30 dollars and 0.46 hours, because I decided early that its price of 2.80 dollars per hour was not worth a full campaign.
+
+The cheap cards barely register. The RTX 3060 ran 13 rentals for 0.10 dollars and the GTX 1080 Ti ran 14 for 0.10 dollars. They were useful for learning which software fails on old hardware, and together they cost less than a cup of coffee.
+
+A caveat on counting rentals: a rental is a created instance, not a successful session. The 5090 count of 39 includes instances that failed to boot or that I replaced because the host reached the model repository slowly. The sections below show how often that happened.
+
+## What each card bought
+
+Dollars mean little without the result they bought. This section pairs each card's spend with the most expensive single piece of evidence it produced. It is a summary of the companion articles, not a replacement for them.
+
+The RTX 5090 took 8.54 dollars, the largest share, and bought three things. It produced the stability test: 4,051 requests over 34.8 minutes against a quantized 27 billion parameter model, with no failed request, a median time to first token of 0.12 seconds and a 95th percentile of 0.21 seconds. It produced the camera study, in which 32 full-resolution streams each received 4.90 inferred frames per second while 64 streams fell to 1.77. And it produced a negative result that was worth money to know: with only 32 gigabytes of memory it cannot load the NVFP4 checkpoint of the 27 billion parameter model, and with the 4-bit AWQ build it served one long-context agent session at a median 11.35 seconds to first token. A card that costs 0.63 dollars per hour can still be the wrong card for a given product, and renting it for an hour told me so for under a dollar.
+
+The RTX PRO 6000, with 5.71 dollars, bought the opposite answer. On the same long-context agent workload it served requests at a median 0.81 seconds to first token, and its NVFP4 configuration reached 1,466 output tokens per second at 32 concurrent users (1,341 at 128 users) with no errors. Its price per hour was 2.6 times the 5090's mean, and for this workload it was the only card that kept the first-token time under a second; the 5090 completed the same turns, 16 times more slowly. Cost per hour and cost per working result point in different directions here, and the second is the one that decides a product.
+
+The L40S, at 3.93 dollars, was the card for FP8. Its plain FP8 configuration reached 337.5 tokens per second at 32 users. It could not hold the draft model for speculative decoding at long context with the settings I tried, which I logged as a finding rather than a failure.
+
+The H100 NVL, rented once for 1.30 dollars, reached 1,402 output tokens per second in FP8 with speculative decoding at 32 users (1,312 at 64 users) and no errors. I excluded it from the rest of the campaign. At 2.80 dollars per hour its throughput per dollar was not better than the PRO 6000's, and a second session would have cost another seven to nine dollars I did not have.
+
+The RTX 4090 and RTX 3090, at 4.05 and 2.97 dollars, were the workhorses for tools: detectors, segmenters, speech and image generation, and the 9-billion-parameter language model comparisons. Their serving numbers for the larger model are modest, with the plain configuration peaking near 296 tokens per second on the 4090 and 257 on the 3090. They are cheap places to learn that something works and expensive places to learn how much load it takes.
+
+The A100, rented once for 0.43 dollars, produced 33 usable rows. The cheap Pascal and Ampere cards, the 1080 Ti and the 3060, produced compatibility facts: which libraries refuse to run on them. Those facts cost ten cents each.
+
+The GB10 is an ARM desktop machine I own. I list it because it appears in the ledger with a price per hour of 0.449 dollars, which is the price at which I list the machine, not a cost I paid. It produced 69 rows. Its serving throughput was 215 to 221 tokens per second in FP8 and NVFP4 with speculative decoding at 32 users, which is competitive with a 3090 on this workload for zero marginal rental cost.
+
+Reading across these entries, the pattern is that expensive cards bought sharp answers to expensive questions (can this serve long contexts?), and cheap cards bought breadth. A campaign that had only used the cheap cards would have cost less than ten dollars and would have missed the one finding that decides what hardware a product needs.
+
+## What an hour costs depends on the card, and on the host
+
+Price per hour is not one number per card. It is a distribution, because on Vast.ai each host sets its own price.
+
+![Figure 4](https://raw.githubusercontent.com/LucasRangelSSouza/gpu-ai-benchmark-hub/main/writeups/what-a-gpu-benchmark-really-costs/figures/fig04.png)
+
+| index  | min Unnamed: 1_level_1 | median Unnamed: 2_level_1 | max Unnamed: 3_level_1 | count Unnamed: 4_level_1 |
+|---|---|---|---|---|
+| GTX 1650 | 0.048 | 0.048 | 0.048 | 1 |
+| GTX 1080 Ti | 0.056 | 0.065 | 0.069 | 14 |
+| RTX 3060 | 0.059 | 0.07 | 0.088 | 13 |
+| RTX 3090 | 0.154 | 0.221 | 0.868 | 30 |
+| GB10 | 0.449 | 0.449 | 0.449 | 3 |
+| RTX 4090 | 0.367 | 0.496 | 0.804 | 29 |
+| A800 PCIE | 0.535 | 0.535 | 0.535 | 1 |
+| RTX 5090 | 0.47 | 0.609 | 1.135 | 39 |
+| A100 PCIE | 0.668 | 0.668 | 0.668 | 1 |
+| L40S | 0.735 | 0.802 | 0.869 | 10 |
+| RTX PRO 6000 | 1.136 | 1.513 | 2.536 | 15 |
+| H100 NVL | 2.803 | 2.803 | 2.803 | 1 |
+
+The spread inside one card is large. RTX 3090 rentals ranged from 0.154 to 0.868 dollars per hour, with a median of 0.221 and a mean of 0.249. The RTX 5090 ranged from 0.470 to 1.135 with a median of 0.609. The RTX 4090 ranged from 0.367 to 0.804 with a median of 0.496. The RTX PRO 6000 is the widest case: 1.136 to 2.536 dollars, median 1.513. The L40S is the tightest, from 0.735 to 0.869, which probably reflects that fewer hosts offer it and they price alike.
+
+The practical point is that a card's list price tells you little. When I picked an offer I sorted by estimated total cost, meaning hourly price plus the cost of downloading the models for that experiment at the host's bandwidth price. A host charging 0.50 dollars per hour with free bandwidth beat a 0.40 dollar host that charged 30 dollars per terabyte for any experiment downloading more than a few gigabytes.
+
+Across all paid rows the median hourly price is 0.497 dollars and the mean is 0.557. The cheapest rows are the 3060, 1080 Ti and 1650 at roughly 0.05 to 0.09 dollars per hour, which I used for small software compatibility tests.
+
+## Time to ready
+
+An instance is billed from creation, not from the moment it is usable. The ledger records the seconds until the instance reported ready for 57 rows.
+
+![Figure 5](https://raw.githubusercontent.com/LucasRangelSSouza/gpu-ai-benchmark-hub/main/writeups/what-a-gpu-benchmark-really-costs/figures/fig05.png)
+
+The median wait is 178 seconds and the maximum is 412 seconds. Three minutes sounds small, for two reasons it is not. First, ready means the container started and answered over SSH. It does not mean the model is downloaded or the server is warm, and those steps came afterwards, taking from a couple of minutes on a fast host to the better part of an hour on a slow one. Second, these 57 rows are the ones that did report ready. Hosts that never became ready have no ready time and so are absent from this plot. Survivorship hides the worst cases.
+
+By card, the L40S rentals were ready fastest (median 106 seconds across 10 rentals), then the RTX PRO 6000 at 128 seconds across 5, the 3090 at 223 seconds across 16, the 4090 at 248 across 6, and the 5090 at 263 seconds across 12. With samples this small I would not read the order as a property of the card. It reflects the hosts that happened to carry that card during that week.
+
+## Where the hosts were
+
+Because bandwidth and distance to the model repository drive download time, host location matters more than it seems.
+
+![Figure 6](https://raw.githubusercontent.com/LucasRangelSSouza/gpu-ai-benchmark-hub/main/writeups/what-a-gpu-benchmark-really-costs/figures/fig06.png)
+
+The United States hosted 45 of the rentals with a recorded country and South Korea 24, followed by Canada with 8 and Vietnam with 7. Taiwan, the United Kingdom, Estonia and Romania follow with 5 or 6 each. I preferred European and North American hosts when offer prices were similar, because Hugging Face downloads from some Asian hosts ran at a fraction of the speed. That preference lives in the harness as a "west first" sort. It is a heuristic, not a measured law. South Korea supplied 24 rentals and several were fast and cheap. The ledger holds no per-host throughput, so I cannot show the effect of geography directly. What I can say is that early on I rejected hosts whose measured download speed fell below a threshold, and every rejected rental still cost minutes of billing.
+
+The nine rows I merged from the event log have no country, because that log did not store it. That is why the country counts above sum to fewer than 164.
+
+## Cost by kind of session
+
+A ledger row carries the name of the session that created it. Grouping by the kind of work shows where the itemized money went by purpose rather than by card.
+
+| index  | rentals Unnamed: 1_level_1 | cost Unnamed: 2_level_1 |
+|---|---|---|
+| Full per-card manifest | 47 | 13.71 |
+| LLM serving and capability runs | 63 | 10.62 |
+| Library timing sweeps | 27 | 2.74 |
+| CPU sandbox tools | 29 | 0.18 |
+
+![Figure 7](https://raw.githubusercontent.com/LucasRangelSSouza/gpu-ai-benchmark-hub/main/writeups/what-a-gpu-benchmark-really-costs/figures/fig07.png)
+
+The full per-card manifests, which ran the whole planned set of experiments on one card in one sitting, took 13.71 dollars across 47 rentals. The LLM serving and capability sessions took 10.62 dollars across 63. The library timing sweeps took 2.74 dollars across 27, and the CPU-only sandbox sessions took 0.18 dollars across 29. The sandbox number is the surprise. Twenty-nine rentals tested whether dozens of tools install and run, and the whole exercise cost less than 20 cents. Cheap CPU instances are the right place to discover that a tool cannot be installed, before a GPU hour is spent on it.
+
+## Cost per measurement
+
+A price per hour describes the supply. The demand side is what one useful number cost. I define a measurement as one row in the two result files, `libs_runs.csv` for tool timings and `llm_serving.csv` for serving load tests, counting only runs that completed. For the serving file that means the rows flagged as valid runs; twelve rows from engine comparisons in which the server never started are excluded.
+
+| index  | rows Unnamed: 1_level_1 | cost Unnamed: 2_level_1 | usd_per_row Unnamed: 3_level_1 |
+|---|---|---|---|
+| A100 | 33 | 0.432 | 0.013 |
+| H100 NVL | 27 | 1.296 | 0.048 |
+| L40S | 71 | 3.925 | 0.055 |
+| RTX 3090 | 52 | 2.966 | 0.057 |
+| RTX 4090 | 66 | 4.046 | 0.061 |
+| RTX PRO 6000 | 75 | 5.713 | 0.076 |
+| RTX 5090 | 42 | 8.536 | 0.203 |
+
+![Figure 8](https://raw.githubusercontent.com/LucasRangelSSouza/gpu-ai-benchmark-hub/main/writeups/what-a-gpu-benchmark-really-costs/figures/fig08.png)
+
+On itemized rental cost alone, the A100 produced measurements most cheaply at 0.013 dollars per row, based on 33 rows from one 0.65 hour rental. The H100 NVL came to 0.048 dollars per row (27 rows), the L40S to 0.055 (71 rows), the RTX 3090 to 0.057 (52 rows) and the RTX 4090 to 0.061 (66 rows). The RTX PRO 6000 reached 0.076 (75 rows). The RTX 5090 was the most expensive per row at 0.203 dollars, with 42 rows against 8.54 dollars of rental.
+
+Two warnings keep this from being a ranking of the cards.
+
+A row is not a unit of equal value. A row from a 60 minute soak test and a row from a 20 millisecond detector call are both one row, so the metric favors experiments that emit many small rows.
+
+The 5090 rentals went disproportionately to long studies, a 35 minute stability test and a camera study, whose output is a handful of summary rows plus large raw files this table does not count. Its cost per row looks bad because its rows are few and heavy. Treat the table as a diagnostic of my workload, not as a verdict on the hardware.
+
+## What the incomplete rows teach
+
+The ledger status splits into 57 complete rentals, 48 partial ones and 49 that never received a closing record.
+
+| index  | rows Unnamed: 1_level_1 | hours Unnamed: 2_level_1 | cost Unnamed: 3_level_1 |
+|---|---|---|---|
+| complete | 57 | 37.58 | 23.3 |
+| partial | 48 | 5.93 | 3.96 |
+| running | 49 | 0 | 0 |
+
+![Figure 9](https://raw.githubusercontent.com/LucasRangelSSouza/gpu-ai-benchmark-hub/main/writeups/what-a-gpu-benchmark-really-costs/figures/fig09.png)
+
+The 57 complete rows account for 37.58 hours and 23.30 dollars. The 48 partial rows account for 5.93 hours and 3.96 dollars. Partial means the instance lived and produced something but did not finish its planned script: a host with too little disk, a package that did not install on that hardware generation, a model that did not fit in memory. Those are not wasted in the research sense, because several became findings (the 32 gigabyte RTX 5090 cannot load the NVFP4 27 billion parameter checkpoint, for example, and that is a measured result). They are wasted in the budget sense, because I paid for them and did not get the number I had planned to collect.
+
+The 49 "running" rows have no recorded hours and no cost, and as explained above they hide an unknown amount of money. If they behaved like the partial rows, with a median lifetime of a few minutes, they would add on the order of a dollar or two. That is a guess, marked as one. It cannot explain the whole gap, so bandwidth and disk billing must account for most of it.
+
+## A budgeting rule I would use next time
+
+From this campaign I can write a rule of thumb, with its error bars stated. The itemized hourly rental was 52 percent of the total spend. If that is typical of model-download-heavy work, the planning multiplier is about 1.9: for every dollar of hourly rental I expect to pay close to two dollars all in. A multiplier from one campaign is a weak estimate, and the true value depends on how much is downloaded. For a workload that downloads nothing new, such as repeating a benchmark on a warmed image, I expect it to fall toward 1.2 or 1.3.
+
+![Figure 10](https://raw.githubusercontent.com/LucasRangelSSouza/gpu-ai-benchmark-hub/main/writeups/what-a-gpu-benchmark-really-costs/figures/fig10.png)
+
+At 0.60 dollars per hour, close to the 5090's mean price, 20 hours of rental would cost 12 dollars on the itemized estimate and about 22 dollars all in at a multiplier of 1.86. The gap between those numbers is the reason I kept running short of credit while believing I had enough.
+
+## The mistakes that cost money
+
+An operator's account is useful here, because the ledger shows the outcome and the notes show the cause. These are the incidents I can name. Each is from my operator log, which is not part of the dataset, so none of them carries a file tag.
+
+First, the 120 gigabyte disk. An early session requested 120 gigabytes of disk. A 27 billion parameter checkpoint, a draft model for speculative decoding and a Python environment did not fit, and the download failed late, after I had paid for the first twenty minutes. I raised the request to 330 gigabytes. Larger disks cost more per hour, but a rental that cannot finish costs everything and returns nothing.
+
+Second, the watchdog race. I wrote a watchdog that destroyed any instance labeled for the campaign that no running script owned. It destroyed a fresh instance in the seconds between creation and the first registration. The fix was a 120 second grace period. The bug cost one rental plus the time to detect it.
+
+Third, preflight checks without redirects. My preflight script tested whether a host could reach the model repository using `curl` without following redirects. Good hosts answered with a redirect and failed the check. I discarded several perfectly fine hosts, then added the redirect flag and restored them. This cost no money directly. It cost options: I rented dearer offers because the cheaper ones had been wrongly blacklisted.
+
+Fourth, the camera step that ran an hour too long. A batch harness for the camera study consumed about an hour of 5090 time before I noticed that it counted repeated frames and so produced inflated numbers. I killed it and rewrote the harness to count only unique frames. The wasted hour cost about 0.60 dollars. Its real cost was the false result I nearly published.
+
+Fifth, the guard. A separate process destroyed any campaign instance when the credit balance fell below a floor. I set the floor to preserve a few dollars for the storage of a personal ARM machine I own. The guard never destroyed anything, but it ran in the background for the second half of the campaign, and knowing it was there changed how aggressively I launched things.
+
+Sixth, the platform's rate limits. HTTP 429 responses killed local runners on several occasions, leaving remote instances alive with no local process watching them. Each such event required a manual sweep, which is why the harness has an orphan sweep.
+
+None of these is exotic. All are ordinary failures of automation that pays by the minute.
+
+## Comparing against buying hardware
+
+A reader may ask whether 50 dollars is cheap. For a measurement campaign across eight cards it is, because buying them would cost thousands. The comparison that matters for a team that benchmarks regularly is different, and I lack the data to settle it. A single RTX 4090 costs less to own than the sum of my rentals, but it would have measured exactly one of the eight cards. The value of renting was breadth: I learned that the 32 gigabyte 5090 cannot serve the 27 billion parameter model at NVFP4 precision, that the 96 gigabyte PRO 6000 can serve long agent sessions, and that old cards fail on modern software. Those answers came from hardware I will never own.
+
+The comparison reverses for sustained workloads. A card that runs at high utilization for months is cheaper to own than to rent. At the campaign's mean prices, a 24-hour-a-day year costs about 2,180 dollars on an RTX 3090 and about 14,500 dollars on an RTX PRO 6000. Those figures are arithmetic on ledger means, not a market quote.
+
+I did not rent anything continuously. The numbers only show the order of magnitude at which renting stops being the sensible option.
+
+## What I would change
+
+Based on the above, the next campaign would differ in five ways.
+
+Log everything at destruction. For each instance: lifetime, hourly price, bytes downloaded, the host's price per terabyte, and the last script stage reached. This turns the unitemized remainder into a table.
+
+Pin the image. Many partial rentals failed on package installation. A prebuilt image with the serving stack would turn minutes of setup, which are billed in fact, into seconds, at the price of maintaining the image.
+
+Cache models in object storage near the hosts. Several rentals downloaded the same checkpoint from Hugging Face over a slow link. A mirror in a region with cheap egress would have cut the bandwidth bill on repeat runs, though I have not priced it.
+
+Decide the sample size before renting. For the cheap cards I collected more rows than I needed. For the expensive ones I sometimes had one run and no repeat, so a single noisy host could define the result. The companion articles flag every measurement that rests on one host.
+
+Rent for questions, not for cards. The most valuable rentals were the ones where I arrived with a written question and an expected number. The least valuable were the ones where I rented a card and decided afterwards what to run on it.
+
+## Questions I expect
+
+Could the campaign have cost less? Probably by a third. The itemized partial rentals cost 3.96 dollars, and the first day's disk and preflight mistakes added to the unitemized remainder, so the reducible waste I can document is under 20 percent of the total. A larger saving would have required skipping the expensive cards, which would have removed the findings that mattered most. I count a third as a plausible ceiling for an operator who had done it before.
+
+Which single change saves the most? Recording download volume per host. It would convert the largest unknown in the budget into a number, and every other decision, from region preference to mirroring checkpoints, would then rest on data instead of on my recollection of which hosts felt slow.
+
+If I had ten dollars, what would I run? On this evidence I would rent one RTX PRO 6000 for two hours at its median price of 1.51 dollars per hour, which is about three dollars, apply the multiplier of 1.86 to get roughly six dollars all in, and spend the remainder on a repeat of the camera study on a second host to see whether the 32-stream result survives a different CPU. The camera result rests on a single host, and that is the weakest high-value number I produced.
+
+Is the multiplier transferable? No. It describes how I worked: large downloads, many hosts, a few mistakes. Treat 1.86 as a warning that the hourly price understates the bill, and measure your own ratio on the first day.
+
+Why publish the mistakes? Because the money lost to them is the most reusable part of the story. A table of GPU prices ages in a month. The failure modes of automation that bills by the minute do not.
+
+## Limitations
+
+The reconciled total is exact only as a balance difference. The deposit I made could have carried a small fee that I did not separate. The ledger's cost column is an estimate by construction. Hourly prices were quoted at rental time and I did not log later changes, though a running instance keeps its rate. Country is the host's declared location and is missing for the rows merged from the event log. The ready time exists for only 57 rows and excludes hosts that never became ready. Cost per row counts every row equally. The cost of the last rental is a balance difference, not a price times time estimate. And the whole study is one campaign by one person over about a day and a half in October 2026, on a marketplace whose prices move.
+
+## How much it cost
+
+This article is about cost, so the section is short. The campaign consumed US$ 50.79, which is R$ 252 at 4.9652. Producing this article added nothing to that figure: it analyses data already collected and runs on Kaggle's free notebook environment. The only direct cost of the article series is my time.
+
+## Reproducing this analysis
+
+Attach the dataset `gpu-ai-benchmark-campaign-2026` to a Kaggle notebook and run the cells in order. The setup cell loads every CSV. If you run it elsewhere, set the `LOCAL_DATA` environment variable to the folder holding the files. The code in this notebook is the code that produced the figures, and nothing is edited by hand.
+
+The companion repositories are published under the GitHub account LucasRangelSSouza. The harness repository contains the scripts that created, watched and destroyed the instances, with the hardcoded credential paths replaced by environment variables.
+
+## Glossary
+
+Lease or rental: one instance created on Vast.ai. Ready time: seconds from creation until the instance accepted an SSH connection. All-in multiplier: the reconciled total divided by the itemized hourly rental estimate. Row: one successful measurement record in the result files. NVFP4: a 4-bit floating point weight format supported by recent NVIDIA GPUs. Speculative decoding: a technique where a small draft model proposes tokens that the large model verifies.
+
+Lucas Rangel

@@ -51,6 +51,10 @@ Eight GPU models (RTX 3090, RTX 4090, RTX 5090, L40S, A100, H100 NVL, RTX PRO 60
 | 19 | [Eighty-three open tools in a disposable sandbox](https://www.kaggle.com/code/lucasrangelss/eighty-three-open-tools-in-a-disposable-sandbox) | 83 open tools in a sandbox: 69% of failures were my harness, retries never helped | [web-automation-lab](https://github.com/LucasRangelSSouza/web-automation-lab), [agent-tooling-token-savings](https://github.com/LucasRangelSSouza/agent-tooling-token-savings), [app-platforms-smoke-tests](https://github.com/LucasRangelSSouza/app-platforms-smoke-tests) |
 | 20 | [From a benchmark to a price per unit](https://www.kaggle.com/code/lucasrangelss/from-a-benchmark-to-a-price-per-unit) | From a measured speed to a price: utilization ceilings, a price formula and what it leaves out | [vast-gpu-benchmark-harness](https://github.com/LucasRangelSSouza/vast-gpu-benchmark-harness) |
 
+## Writeup versions
+
+`writeups/<article>/writeup.md` holds each article as plain Markdown without code (prose, tables and figures; the figures are the PNG files next to it), ready to paste into the Kaggle Writeups editor.
+
 ## Ten findings that survived the checking
 
 1. A benchmark campaign's total spend was **1.86x** its hourly-rental estimate; the difference is what price lists do not show.
